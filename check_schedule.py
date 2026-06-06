@@ -25,6 +25,17 @@ def save_state(state):
 def download_calendar():
     url = os.environ["ICS_URL"]
 
+    response = requests.get(url, timeout=30)
+    response.raise_for_status()
+
+    print("RAW ICS PREVIEW:")
+    print(response.text[:1000])  # ADD THIS
+
+    return Calendar.from_ical(response.content)
+
+def download_1calendar():
+    url = os.environ["ICS_URL"]
+
     if url.startswith("webcal://"):
         url = url.replace("webcal://", "https://", 1)
 
