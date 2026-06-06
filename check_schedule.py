@@ -25,11 +25,18 @@ def save_state(state):
 def download_calendar():
     url = os.environ["ICS_URL"]
 
-    # FIX: handle webcal:// feeds
     if url.startswith("webcal://"):
         url = url.replace("webcal://", "https://", 1)
 
-    response = requests.get(url, timeout=30)
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/120.0 Safari/537.36"
+        )
+    }
+
+    response = requests.get(url, headers=headers, timeout=30)
     response.raise_for_status()
 
     return Calendar.from_ical(response.content)
