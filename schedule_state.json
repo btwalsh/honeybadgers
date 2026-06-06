@@ -1,1 +1,128 @@
-{}
+{
+  "ga-54034-9941-9944-@krakenhockeyleague.com": {
+    "end": "vDDDTypes(2025-12-15 04:30:00+00:00, Parameters({}))",
+    "fingerprint": "64775848b0623925941fe7a69b15838c6a155102f091bab448ac8bdec8850023",
+    "location": "Everett Comm Ice Rink",
+    "start": "vDDDTypes(2025-12-15 02:30:00+00:00, Parameters({}))",
+    "summary": " \ud83c\udfd2Kraken Hockey League Game - Honey Badgers 4 @ Real Bacon 1"
+  },
+  "ga-54240-9941-9944-@krakenhockeyleague.com": {
+    "end": "vDDDTypes(2026-01-13 08:55:00+00:00, Parameters({}))",
+    "fingerprint": "6fec52bdaffa15741ee186c9180369f579b3b5a9de3750f753050913108bf066",
+    "location": "Kent Valley Ice Centre",
+    "start": "vDDDTypes(2026-01-13 06:55:00+00:00, Parameters({}))",
+    "summary": " \ud83c\udfd2Kraken Hockey League Game - Honey Badgers 3 @ Coyotes 1"
+  },
+  "ga-54352-9941-9944-@krakenhockeyleague.com": {
+    "end": "vDDDTypes(2026-01-19 06:00:00+00:00, Parameters({}))",
+    "fingerprint": "5bb09d1d21b5f55bb3b79ac88e273a6e1baeefba49d27f9fd19b4204d923b818",
+    "location": "Kent Valley Ice Centre",
+    "start": "vDDDTypes(2026-01-19 04:00:00+00:00, Parameters({}))",
+    "summary": " \ud83c\udfd2Kraken Hockey League Game - Greenhorns 7 @ Honey Badgers 4"
+  },
+  "ga-54438-9941-9944-@krakenhockeyleague.com": {
+    "end": "vDDDTypes(2026-01-27 08:50:00+00:00, Parameters({}))",
+    "fingerprint": "97881e657fc9aa39496fe415f0b557f6c0055ccd0a5df6b6c6b0f909ffda33b9",
+    "location": "Angel of the Winds Arena",
+    "start": "vDDDTypes(2026-01-27 06:50:00+00:00, Parameters({}))",
+    "summary": " \ud83c\udfd2Kraken Hockey League Game - Monarchs 6C 4 @ Honey Badgers 4"
+  },
+  "ga-54542-9941-9944-@krakenhockeyleague.com": {
+    "end": "vDDDTypes(2026-02-03 08:55:00+00:00, Parameters({}))",
+    "fingerprint": "7db0059a0c1b5c0f9edc5001b6b0b5df7b3e2a4aa6b645cd2c66f93539e6c084",
+    "location": "Kent Valley Ice Centre",
+    "start": "vDDDTypes(2026-02-03 06:55:00+00:00, Parameters({}))",
+    "summary": " \ud83c\udfd2Kraken Hockey League Game - Honey Badgers 1 @ Hackers 3"
+  },
+  "ga-54595-9941-9944-@krakenhockeyleague.com": {
+    "end": "vDDDTypes(2026-02-10 07:25:00+00:00, Parameters({}))",
+    "fingerprint": "73ac9d1aa3598cc2cd2d55af415120219de408fb30230955e51cd8b0aa0a1cfe",
+    "location": "Angel of the Winds Arena",
+    "start": "vDDDTypes(2026-02-10 05:25:00+00:00, Parameters({}))",
+    "summary": " \ud83c\udfd2Kraken Hockey League Game - Honey Badgers 3 @ Real Bacon 3"
+  },
+  "ga-54651-9941-9944-@krakenhockeyleague.com": {
+    "end": "vDDDTypes(2026-02-16 04:35:00+00:00, Parameters({}))",
+    "fingerprint": "50815d28c24f433bf4c762e454b1edc40d7fb31620108353b000c9a6192c0aec",
+    "location": "Kent Valley Ice Centre",
+    "start": "vDDDTypes(2026-02-16 02:35:00+00:00, Parameters({}))",
+    "summary": " \ud83c\udfd2Kraken Hockey League Game - Coyotes 5 @ Honey Badgers 1"
+  },
+  "ga-54740-9941-9944-@krakenhockeyleague.com": {
+    "end": "vDDDTypes(2026-02-23 03:20:00+00:00, Parameters({}))",
+    "fingerprint": "becc6bc21f667eb5a5e35ee78df33016bb8a6c06499854c5949cc090c75484a5",
+    "location": "KCI Starbucks Rink",
+    "start": "vDDDTypes(2026-02-23 01:20:00+00:00, Parameters({}))",
+    "summary": " \ud83c\udfd2Kraken Hockey League Game - Greenhorns 7 @ Honey Badgers 6"
+  },
+  "ga-54822-9941-9944-@krakenhockeyleague.com": {
+    "end": "vDDDTypes(2026-03-02 07:30:00+00:00, Parameters({}))",
+    "fingerprint": "bf63dfc3cfc4f9c1df98e5d9d1ad0591cb6baca31249a44ba53f7a3f01658645",
+    "location": "KCI VMFH Rink",
+    "start": "vDDDTypes(2026-03-02 05:30:00+00:00, Parameters({}))",
+    "summary": " \ud83c\udfd2Kraken Hockey League Game - Monarchs 6C 2 @ Honey Badgers 3"
+  },
+  "ga-54891-9941-9944-@krakenhockeyleague.com": {
+    "end": "vDDDTypes(2026-03-09 06:30:00+00:00, Parameters({}))",
+    "fingerprint": "9a65eaa3f8770bc65633734601d8dd4189b2827d1add485856ccbacbb420cfe8",
+    "location": "KCI VMFH Rink",
+    "start": "vDDDTypes(2026-03-09 04:30:00+00:00, Parameters({}))",
+    "summary": " \ud83c\udfd2Kraken Hockey League Game - Honey Badgers 4 @ Hackers 2"
+  },
+  "ga-55028-9941-9944-@krakenhockeyleague.com": {
+    "end": "vDDDTypes(2026-03-16 06:15:00+00:00, Parameters({}))",
+    "fingerprint": "c1ed425a9b98042216f4a191046bd8b70ae979fbea9e4506601aa772a772f5ed",
+    "location": "Olympic View Arena",
+    "start": "vDDDTypes(2026-03-16 04:15:00+00:00, Parameters({}))",
+    "summary": " \ud83c\udfd2Kraken Hockey League Game - Honey Badgers 1 @ Real Bacon 4"
+  },
+  "ga-55047-9941-9944-@krakenhockeyleague.com": {
+    "end": "vDDDTypes(2026-03-18 05:45:00+00:00, Parameters({}))",
+    "fingerprint": "fa0ec5c03cd58a27364ebb652cc1d19855a67dc55ee6871b730a9d7fbf8da70b",
+    "location": "Olympic View Arena",
+    "start": "vDDDTypes(2026-03-18 03:45:00+00:00, Parameters({}))",
+    "summary": " \ud83c\udfd2Kraken Hockey League Game - Honey Badgers 6 @ Greenhorns 4"
+  },
+  "ga-55116-9941-9944-@krakenhockeyleague.com": {
+    "end": "vDDDTypes(2026-03-23 04:45:00+00:00, Parameters({}))",
+    "fingerprint": "0822ea1cf234ca7cdce23260b7331bc2a7ef5370be708e7d19bb6583dd72516b",
+    "location": "Angel of the Winds Arena",
+    "start": "vDDDTypes(2026-03-23 02:45:00+00:00, Parameters({}))",
+    "summary": " \ud83c\udfd2Kraken Hockey League Game - Real Bacon 6 @ Honey Badgers 2"
+  },
+  "ga-55274-9941-9944-@krakenhockeyleague.com": {
+    "end": "vDDDTypes(2026-03-29 23:50:00+00:00, Parameters({}))",
+    "fingerprint": "816e77d467eb926560ba8fc6afa4bf1201704fb6a9f80682773bafdfc3d149ad",
+    "location": "Angel of the Winds Arena",
+    "start": "vDDDTypes(2026-03-29 21:50:00+00:00, Parameters({}))",
+    "summary": " \ud83c\udfd2Kraken Hockey League Game - Coyotes 3 @ Honey Badgers 2"
+  },
+  "ga-55481-9941-9944-@krakenhockeyleague.com": {
+    "end": "vDDDTypes(2026-05-12 05:30:00+00:00, Parameters({}))",
+    "fingerprint": "e1b726e113a873219fc509d278d0132c583e045bbd301f21f4c46fdc8d6be919",
+    "location": "Angel of the Winds Arena",
+    "start": "vDDDTypes(2026-05-12 03:30:00+00:00, Parameters({}))",
+    "summary": " \ud83c\udfd2Kraken Hockey League Game - Hackers 6 @ Honey Badgers 7"
+  },
+  "ga-55591-9941-9944-@krakenhockeyleague.com": {
+    "end": "vDDDTypes(2026-05-19 06:25:00+00:00, Parameters({}))",
+    "fingerprint": "757165447dfc21c8ea19eec2f312d431e1b2dbdb6fdc1dd49ea560fb52631c81",
+    "location": "KCI VMFH Rink",
+    "start": "vDDDTypes(2026-05-19 04:25:00+00:00, Parameters({}))",
+    "summary": " \ud83c\udfd2Kraken Hockey League Game - Dirty Couch Hockey Club 3 @ Honey Badgers 5"
+  },
+  "ga-55744-9941-9944-@krakenhockeyleague.com": {
+    "end": "vDDDTypes(2026-06-03 07:55:00+00:00, Parameters({}))",
+    "fingerprint": "6167f6bc85f751c30c78fc63c7411951b687889a60e452823a8f46ba2b69b50c",
+    "location": "KCI VMFH Rink",
+    "start": "vDDDTypes(2026-06-03 05:55:00+00:00, Parameters({}))",
+    "summary": " \ud83c\udfd2Kraken Hockey League Game - TP5/Fossils 7 @ Honey Badgers 8"
+  },
+  "ga-55834-9941-9944-@krakenhockeyleague.com": {
+    "end": "vDDDTypes(2026-06-09 05:45:00+00:00, Parameters({}))",
+    "fingerprint": "61c43346e2200ad96473cb487af832e9677c0a4ac645ff15d5fb298c7bbc1def",
+    "location": "Olympic View Arena",
+    "start": "vDDDTypes(2026-06-09 03:45:00+00:00, Parameters({}))",
+    "summary": " \ud83c\udfd2Kraken Hockey League Game - Jokres @ Honey Badgers"
+  }
+}
