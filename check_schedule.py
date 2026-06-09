@@ -3,6 +3,7 @@ import json
 import os
 import smtplib
 from email.message import EmailMessage
+from zoneinfo import ZoneInfo
 
 import requests
 from icalendar import Calendar
@@ -21,6 +22,17 @@ def save_state(state):
     with open(STATE_FILE, "w") as f:
         json.dump(state, f, indent=2, sort_keys=True)
 
+
+def format_datetime(dt_field):
+    if not dt_field:
+        return ""
+
+    dt = dt_field.dt
+
+    if hasattr(dt, "astimezone"):
+        dt = dt.astimezone(ZoneInfo("America/Los_Angeles"))
+
+    return dt.strftime("%a %b %d, %Y %I:%M %p %Z")
 
 def download_calendar():
     url = os.environ["ICS_URL"]
@@ -82,12 +94,12 @@ def parse_events(calendar):
         uid = str(component.get("UID"))
 
         events[uid] = {
-            "summary": str(component.get("SUMMARY", "")),
-            "start": str(component.get("DTSTART", "")),
-            "end": str(component.get("DTEND", "")),
-            "location": str(component.get("LOCATION", "")),
-            "fingerprint": event_fingerprint(component),
-        }
+        "summary": str(component.get("SUMMARY", "")),
+        "start": format_datetime(component.get("DTSTART")),
+        "end": format_datetime(component.get("DTEND")),
+        "location": str(component.get("LOCATION", "")),
+        "fingerprint": event_fingerprint(component),
+    }
 
     return events
 
