@@ -2,6 +2,7 @@ import hashlib
 import json
 import os
 import smtplib
+from datetime import datetime
 from email.message import EmailMessage
 from zoneinfo import ZoneInfo
 
@@ -63,6 +64,13 @@ def event_fingerprint(event):
 
     return hashlib.sha256(raw.encode()).hexdigest()
 
+PACIFIC = ZoneInfo("America/Los_Angeles")
+
+
+def is_future_event(event):
+    start = datetime.fromisoformat(event["start_iso"])
+    return start > datetime.now(PACIFIC)
+
 
 def parse_events(calendar):
     events = {}
@@ -73,13 +81,21 @@ def parse_events(calendar):
 
         uid = str(component.get("UID"))
 
+        dtstart = component.get("DTSTART").dt
+
+        if dtstart.tzinfo is None:
+            dtstart = dtstart.replace(tzinfo=PACIFIC)
+
+        start_iso = dtstart.astimezone(PACIFIC).isoformat()
+
         events[uid] = {
-        "summary": str(component.get("SUMMARY", "")),
-        "start": format_datetime(component.get("DTSTART")),
-        "end": format_datetime(component.get("DTEND")),
-        "location": str(component.get("LOCATION", "")),
-        "fingerprint": event_fingerprint(component),
-    }
+            "summary": str(component.get("SUMMARY", "")),
+            "start": format_datetime(component.get("DTSTART")),
+            "end": format_datetime(component.get("DTEND")),
+            "start_iso": start_iso,
+            "location": str(component.get("LOCATION", "")),
+            "fingerprint": event_fingerprint(component),
+        }
 
     return events
 
@@ -96,10 +112,14 @@ def diff_events(old, new):
         added.append(new[uid])
 
     for uid in old_uids - new_uids:
-        removed.append(old[uid])
-
+        if is_future_event(old[uid]):
+            removed.append(old[uid])
+    
     for uid in old_uids & new_uids:
-        if old[uid]["fingerprint"] != new[uid]["fingerprint"]:
+        if (
+            old[uid]["fingerprint"] != new[uid]["fingerprint"]
+            and is_future_event(new[uid])
+        ):
             changed.append({
                 "before": old[uid],
                 "after": new[uid]
