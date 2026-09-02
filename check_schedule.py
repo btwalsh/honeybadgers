@@ -15,115 +15,102 @@ PACIFIC = ZoneInfo("America/Los_Angeles")
 
 
 def load_state():
-    if os.path.exists(STATE_FILE):
-        with open(STATE_FILE, "r") as f:
-            return json.load(f)
+    if not os.path.exists(STATE_FILE):
+        return {}
 
-    return {}
+    with open(STATE_FILE, "r", encoding="utf-8") as f:
+        return json.load(f)
 
 
 def save_state(state):
-    with open(STATE_FILE, "w") as f:
+    with open(STATE_FILE, "w", encoding="utf-8") as f:
         json.dump(state, f, indent=2, sort_keys=True)
 
 
 def download_calendar():
     url = os.environ["ICS_URL"]
 
+    # requests does not support webcal:// directly
     if url.startswith("webcal://"):
-        url = url.replace("webcal://", "https://", 1)
+        url = "https://" + url[len("webcal://"):]
 
     headers = {
         "User-Agent": (
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
             "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/120.0 Safari/537.36"
+            "Chrome/139.0 Safari/537.36"
         ),
         "Accept": "text/calendar,text/plain,*/*",
     }
 
-    response = requests.get(
-        url,
-        headers=headers,
-        timeout=30
-    )
-
+    response = requests.get(url, headers=headers, timeout=30)
     response.raise_for_status()
 
-    print("RAW ICS PREVIEW:")
-    print(response.text[:2000])
-
-    return Calendar.from_ical(response.content)
+    return response.content
 
 
-def event_fingerprint(event):
-    uid = str(event.get("UID", ""))
-
-    start = str(event.get("DTSTART", ""))
-    end = str(event.get("DTEND", ""))
-    summary = str(event.get("SUMMARY", ""))
-    location = str(event.get("LOCATION", ""))
-
-    raw = "|".join([
-        uid,
-        start,
-        end,
-        summary,
-        location,
-    ])
-
-    return hashlib.sha256(raw.encode()).hexdigest()
-
-
-def format_datetime(dt_field):
-    if not dt_field:
+def format_datetime(dt):
+    if dt is None:
         return ""
 
-    dt = dt_field.dt
+    # Convert timezone-aware datetimes to Pacific time
+    if dt.tzinfo is not None:
+        dt = dt.astimezone(PACIFIC)
 
-    # Handle date-only events
-    if not hasattr(dt, "astimezone"):
-        return str(dt)
-
-    dt = dt.astimezone(PACIFIC)
-
-    return dt.strftime("%a %b %d, %Y %I:%M %p %Z")
+    return dt.strftime("%a, %b %-d, %Y at %-I:%M %p PT")
 
 
-def datetime_to_iso(dt_field):
-    if not dt_field:
-        return ""
+def datetime_to_iso(dt):
+    if dt is None:
+        return None
 
-    dt = dt_field.dt
+    if dt.tzinfo is not None:
+        dt = dt.astimezone(PACIFIC)
 
-    # Handle date-only events
-    if not hasattr(dt, "astimezone"):
-        return datetime(
-            dt.year,
-            dt.month,
-            dt.day,
-            tzinfo=PACIFIC
-        ).isoformat()
-
-    return dt.astimezone(PACIFIC).isoformat()
+    return dt.isoformat()
 
 
-def parse_events(calendar):
+def parse_events(calendar_data):
+    calendar = Calendar.from_ical(calendar_data)
+
     events = {}
 
-    for component in calendar.walk():
-        if component.name != "VEVENT":
+    for component in calendar.walk("VEVENT"):
+        uid = str(component.get("UID", "")).strip()
+
+        if not uid:
             continue
 
-        uid = str(component.get("UID"))
+        summary = str(component.get("SUMMARY", "")).strip()
+        location = str(component.get("LOCATION", "")).strip()
+
+        dtstart = component.get("DTSTART")
+        dtend = component.get("DTEND")
+
+        start_dt = dtstart.dt if dtstart else None
+        end_dt = dtend.dt if dtend else None
+
+        # Skip events that don't have a usable datetime
+        if not isinstance(start_dt, datetime):
+            continue
 
         events[uid] = {
-            "summary": str(component.get("SUMMARY", "")),
-            "start": format_datetime(component.get("DTSTART")),
-            "end": format_datetime(component.get("DTEND")),
-            "start_iso": datetime_to_iso(component.get("DTSTART")),
-            "location": str(component.get("LOCATION", "")),
-            "fingerprint": event_fingerprint(component),
+            "summary": summary,
+            "start": format_datetime(start_dt),
+            "end": format_datetime(end_dt),
+            "start_iso": datetime_to_iso(start_dt),
+            "location": location,
+            "fingerprint": hashlib.sha256(
+                json.dumps(
+                    {
+                        "summary": summary,
+                        "start_iso": datetime_to_iso(start_dt),
+                        "end_iso": datetime_to_iso(end_dt),
+                        "location": location,
+                    },
+                    sort_keys=True,
+                ).encode("utf-8")
+            ).hexdigest(),
         }
 
     return events
@@ -131,79 +118,82 @@ def parse_events(calendar):
 
 def get_event_datetime(event):
     """
-    Return the event's start time as a timezone-aware datetime.
+    Safely get an event's start datetime from state.
 
-    Handles both the current state format and the older state format.
+    Older versions of schedule_state.json may not have start_iso.
     """
     start_iso = event.get("start_iso")
 
-    if start_iso:
-        return datetime.fromisoformat(start_iso)
+    if not start_iso:
+        return None
 
-    # Old state files did not contain start_iso.
-    # We cannot reliably reconstruct the original datetime from
-    # the formatted display string, so treat old events as unknown.
-    return None
+    try:
+        return datetime.fromisoformat(start_iso)
+    except (ValueError, TypeError):
+        return None
 
 
 def is_future_event(event):
-    start = get_event_datetime(event)
+    dt = get_event_datetime(event)
 
-    if start is None:
+    if dt is None:
         return False
 
-    return start > datetime.now(PACIFIC)
+    now = datetime.now(PACIFIC)
+
+    return dt > now
 
 
-def diff_events(old, new):
+def diff_events(old_state, new_state):
     added = []
     removed = []
 
-    old_uids = set(old.keys())
-    new_uids = set(new.keys())
+    # New events:
+    # Only alert if the new game is in the future.
+    for uid, event in new_state.items():
+        if uid not in old_state and is_future_event(event):
+            added.append(event)
 
-    # New events
-    for uid in new_uids - old_uids:
-        if is_future_event(new[uid]):
-            added.append(new[uid])
-
-    # Removed events
-    for uid in old_uids - new_uids:
-        if is_future_event(old[uid]):
-            removed.append(old[uid])
-
-    # We intentionally DO NOT report changed events.
+    # Removed events:
+    # Only alert if the old game was still in the future.
     #
-    # Completed games frequently get updated with scores or other
-    # information. Those changes are not useful schedule alerts.
-    #
-    # If we later want to notify about future-game reschedules,
-    # that can be added separately.
+    # This intentionally ignores old/past games falling off
+    # the rolling calendar feed.
+    for uid, event in old_state.items():
+        if uid not in new_state and is_future_event(event):
+            removed.append(event)
 
     return added, removed
 
 
 def send_email(subject, body):
-    user = os.environ["SMTP_USER"]
-    password = os.environ["SMTP_PASSWORD"]
-    recipient = os.environ["ALERT_EMAIL"]
+    smtp_user = os.environ["SMTP_USER"]
+    smtp_password = os.environ["SMTP_PASSWORD"]
+    alert_email = os.environ["ALERT_EMAIL"]
 
     msg = EmailMessage()
     msg["Subject"] = subject
-    msg["From"] = user
-    msg["To"] = recipient
+    msg["From"] = smtp_user
+    msg["To"] = alert_email
     msg.set_content(body)
 
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
-        smtp.login(user, password)
+    with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
+        smtp.starttls()
+        smtp.login(smtp_user, smtp_password)
         smtp.send_message(msg)
 
 
 def format_event(event):
-    lines = [
-        event["summary"],
-        f"Start: {event['start']}",
-    ]
+    lines = []
+
+    if event.get("summary"):
+        lines.append(f"Game: {event['summary']}")
+
+    if event.get("start"):
+        lines.append(f"Start: {event['start']}")
+
+    if event.get("end"):
+        lines.append(f"End: {event['end']}")
 
     if event.get("location"):
         lines.append(f"Location: {event['location']}")
@@ -212,35 +202,34 @@ def format_event(event):
 
 
 def main():
+    print("Downloading calendar...")
+
+    calendar_data = download_calendar()
+    new_state = parse_events(calendar_data)
+
+    print(f"Current events found: {len(new_state)}")
+
     old_state = load_state()
 
-    calendar = download_calendar()
-    new_state = parse_events(calendar)
-
-    print(f"Events currently found: {len(new_state)}")
-
-    #
-    # First run / empty baseline
-    #
+    # First run
     if not old_state:
+        print("No existing state found.")
+        print("Initializing baseline.")
+
         send_email(
-            subject="Kraken Schedule Watcher Initialized",
-            body=(
-                "Monitoring successfully started.\n\n"
+            "Kraken Schedule Watcher Initialized",
+            (
+                f"The Kraken Hockey League schedule watcher has been initialized.\n\n"
                 f"Current events found: {len(new_state)}\n\n"
-                "Future additions and removals will "
-                "generate alerts automatically."
-            )
+                f"Future games will trigger email alerts when they are added or removed."
+            ),
         )
 
         save_state(new_state)
-
-        print("Baseline established.")
+        print("Baseline saved.")
         return
 
-    #
-    # Detect whether this is an old-format state file.
-    #
+    # Upgrade old state files that were created before start_iso existed.
     old_state_needs_upgrade = any(
         "start_iso" not in event
         for event in old_state.values()
@@ -255,40 +244,18 @@ def main():
         print("State file upgraded.")
         return
 
-    #
-    # Normal diff
-    #
     added, removed = diff_events(old_state, new_state)
 
-    print(f"New future games: {len(added)}")
-    print(f"Removed future games: {len(removed)}")
-
+    # Nothing relevant changed
     if not added and not removed:
         print("No relevant changes found.")
 
-        # Always save the latest state so score/metadata changes
-        # don't repeatedly affect future comparisons.
         save_state(new_state)
-
         return
 
-    body_lines = []
-
-    if added:
-        body_lines.append("=== NEW GAMES ===")
-        body_lines.append("")
-
-        for event in sorted(added, key=lambda e: e["start_iso"]):
-            body_lines.append(format_event(event))
-            body_lines.append("")
-
-    if removed:
-        body_lines.append("=== REMOVED FUTURE GAMES ===")
-        body_lines.append("")
-
-        for event in sorted(removed, key=lambda e: e["start_iso"]):
-            body_lines.append(format_event(event))
-            body_lines.append("")
+    # Sort chronologically
+    added.sort(key=lambda event: event.get("start_iso") or "")
+    removed.sort(key=lambda event: event.get("start_iso") or "")
 
     subject_parts = []
 
@@ -300,21 +267,37 @@ def main():
 
     if removed:
         subject_parts.append(
-            f"{len(removed)} future game"
+            f"{len(removed)} future game removed"
             + ("" if len(removed) == 1 else "s")
-            + " removed"
         )
 
     subject = "Kraken Schedule: " + ", ".join(subject_parts)
 
-    send_email(
-        subject=subject,
-        body="\n".join(body_lines)
-    )
+    body_parts = []
+
+    if added:
+        body_parts.append("NEW FUTURE GAMES\n")
+
+        for event in added:
+            body_parts.append(format_event(event))
+            body_parts.append("")
+
+    if removed:
+        body_parts.append("REMOVED FUTURE GAMES\n")
+
+        for event in removed:
+            body_parts.append(format_event(event))
+            body_parts.append("")
+
+    body = "\n".join(body_parts).strip()
+
+    print(subject)
+    print(body)
+
+    send_email(subject, body)
 
     save_state(new_state)
 
-    print("Notification sent.")
     print("State updated.")
 
 
