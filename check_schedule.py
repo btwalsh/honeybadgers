@@ -1,3 +1,4 @@
+```python
 import hashlib
 import json
 import os
@@ -53,7 +54,6 @@ def format_datetime(dt):
     if dt is None:
         return ""
 
-    # Convert timezone-aware datetimes to Pacific time
     if dt.tzinfo is not None:
         dt = dt.astimezone(PACIFIC)
 
@@ -90,7 +90,6 @@ def parse_events(calendar_data):
         start_dt = dtstart.dt if dtstart else None
         end_dt = dtend.dt if dtend else None
 
-        # Skip events that don't have a usable datetime
         if not isinstance(start_dt, datetime):
             continue
 
@@ -119,8 +118,6 @@ def parse_events(calendar_data):
 def get_event_datetime(event):
     """
     Safely get an event's start datetime from state.
-
-    Older versions of schedule_state.json may not have start_iso.
     """
     start_iso = event.get("start_iso")
 
@@ -147,23 +144,45 @@ def is_future_event(event):
 def diff_events(old_state, new_state):
     added = []
     removed = []
+    rescheduled = []
 
-    # New events:
-    # Only alert if the new game is in the future.
+    # New future games
     for uid, event in new_state.items():
         if uid not in old_state and is_future_event(event):
             added.append(event)
 
-    # Removed events:
-    # Only alert if the old game was still in the future.
-    #
-    # This intentionally ignores old/past games falling off
-    # the rolling calendar feed.
+    # Removed future games
     for uid, event in old_state.items():
         if uid not in new_state and is_future_event(event):
             removed.append(event)
 
-    return added, removed
+    # Future games whose scheduled time changed
+    for uid, old_event in old_state.items():
+        if uid not in new_state:
+            continue
+
+        new_event = new_state[uid]
+
+        # Only care about games that were still in the future
+        # according to the old schedule.
+        if not is_future_event(old_event):
+            continue
+
+        old_start = old_event.get("start_iso")
+        new_start = new_event.get("start_iso")
+
+        old_end = old_event.get("end_iso")
+        new_end = new_event.get("end_iso")
+
+        if old_start != new_start or old_end != new_end:
+            rescheduled.append(
+                {
+                    "old": old_event,
+                    "new": new_event,
+                }
+            )
+
+    return added, removed, rescheduled
 
 
 def send_email(subject, body):
@@ -201,6 +220,33 @@ def format_event(event):
     return "\n".join(lines)
 
 
+def format_reschedule(reschedule):
+    old_event = reschedule["old"]
+    new_event = reschedule["new"]
+
+    lines = []
+
+    if new_event.get("summary"):
+        lines.append(f"Game: {new_event['summary']}")
+
+    lines.append("")
+    lines.append(f"OLD TIME: {old_event.get('start', '')}")
+
+    if old_event.get("end"):
+        lines.append(f"OLD END:  {old_event.get('end', '')}")
+
+    lines.append("")
+    lines.append(f"NEW TIME: {new_event.get('start', '')}")
+
+    if new_event.get("end"):
+        lines.append(f"NEW END:  {new_event.get('end', '')}")
+
+    if new_event.get("location"):
+        lines.append(f"Location: {new_event['location']}")
+
+    return "\n".join(lines)
+
+
 def main():
     print("Downloading calendar...")
 
@@ -221,7 +267,8 @@ def main():
             (
                 f"The Kraken Hockey League schedule watcher has been initialized.\n\n"
                 f"Current events found: {len(new_state)}\n\n"
-                f"Future games will trigger email alerts when they are added or removed."
+                f"Future games will trigger email alerts when they are "
+                f"added, removed, or rescheduled."
             ),
         )
 
@@ -244,10 +291,10 @@ def main():
         print("State file upgraded.")
         return
 
-    added, removed = diff_events(old_state, new_state)
+    added, removed, rescheduled = diff_events(old_state, new_state)
 
     # Nothing relevant changed
-    if not added and not removed:
+    if not added and not removed and not rescheduled:
         print("No relevant changes found.")
 
         save_state(new_state)
@@ -256,6 +303,9 @@ def main():
     # Sort chronologically
     added.sort(key=lambda event: event.get("start_iso") or "")
     removed.sort(key=lambda event: event.get("start_iso") or "")
+    rescheduled.sort(
+        key=lambda item: item["new"].get("start_iso") or ""
+    )
 
     subject_parts = []
 
@@ -269,6 +319,12 @@ def main():
         subject_parts.append(
             f"{len(removed)} future game removed"
             + ("" if len(removed) == 1 else "s")
+        )
+
+    if rescheduled:
+        subject_parts.append(
+            f"{len(rescheduled)} game rescheduled"
+            + ("" if len(rescheduled) == 1 else "s")
         )
 
     subject = "Kraken Schedule: " + ", ".join(subject_parts)
@@ -289,6 +345,13 @@ def main():
             body_parts.append(format_event(event))
             body_parts.append("")
 
+    if rescheduled:
+        body_parts.append("RESCHEDULED FUTURE GAMES\n")
+
+        for reschedule in rescheduled:
+            body_parts.append(format_reschedule(reschedule))
+            body_parts.append("")
+
     body = "\n".join(body_parts).strip()
 
     print(subject)
@@ -303,3 +366,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+```
