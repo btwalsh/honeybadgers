@@ -150,5 +150,13 @@
     "start": "Mon, Oct 19, 2026 at 10:30 PM PT",
     "start_iso": "2026-10-19T22:30:00-07:00",
     "summary": "\ud83c\udfd2Kraken Hockey League Game - Squids @ Honey Badgers"
+  },
+  "ga-57278-9941-9944-@krakenhockeyleague.com": {
+    "end": "Mon, Oct 26, 2026 at 11:05 PM PT",
+    "fingerprint": "6e8c120e7d0c9d26825f25e65ef10e7ff75f096c44e6062be9fca94c3403af04",
+    "location": "KCI Starbucks Rink",
+    "start": "Mon, Oct 26, 2026 at 9:05 PM PT",
+    "start_iso": "2026-10-26T21:05:00-07:00",
+    "summary": "\ud83c\udfd2Kraken Hockey League Game - Honey Badgers @ Rainier Reindeer HC-6"
   }
 }
