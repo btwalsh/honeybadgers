@@ -158,5 +158,13 @@
     "start": "Mon, Oct 26, 2026 at 9:05 PM PT",
     "start_iso": "2026-10-26T21:05:00-07:00",
     "summary": "\ud83c\udfd2Kraken Hockey League Game - Honey Badgers @ Rainier Reindeer HC-6B"
+  },
+  "ga-57346-9941-9944-@krakenhockeyleague.com": {
+    "end": "Tue, Nov 3, 2026 at 11:15 PM PT",
+    "fingerprint": "51f32f5eaf18d7c67f292f9a3155260b3ecca382da0c63cfe18c0a4c38f6ec55",
+    "location": "Olympic View Arena",
+    "start": "Tue, Nov 3, 2026 at 9:15 PM PT",
+    "start_iso": "2026-11-03T21:15:00-08:00",
+    "summary": "\ud83c\udfd2Kraken Hockey League Game - Wranglers @ Honey Badgers"
   }
 }
