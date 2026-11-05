@@ -160,35 +160,43 @@
     "summary": "\ud83c\udfd2Kraken Hockey League Game - Honey Badgers 4 @ Rainier Reindeer HC-6B 5"
   },
   "ga-57346-9941-9944-@krakenhockeyleague.com": {
-    "end": "Tue, Nov 3, 2026 at 11:15 PM PT",
-    "fingerprint": "2924cff5a2c0905516dcf35bf27fa99a38b33788c1da9ecbc006d0847b4a4f24",
+    "end": "Wed, Nov 4, 2026 at 12:15 AM PT",
+    "fingerprint": "01892a654889582f7fcdded16624cfcb5ab1502a8d658c766f3ddc6af6d174ab",
     "location": "Olympic View Arena",
-    "start": "Tue, Nov 3, 2026 at 9:15 PM PT",
-    "start_iso": "2026-11-03T21:15:00-08:00",
+    "start": "Tue, Nov 3, 2026 at 10:15 PM PT",
+    "start_iso": "2026-11-03T22:15:00-08:00",
     "summary": "\ud83c\udfd2Kraken Hockey League Game - Wranglers 6 @ Honey Badgers 2"
   },
   "ga-57412-9941-9944-@krakenhockeyleague.com": {
-    "end": "Mon, Nov 9, 2026 at 10:25 PM PT",
-    "fingerprint": "aa3227b6cb10325c28395780a6da7f2b7903f0bc2fd1320abb59f7e3bef9b3e4",
+    "end": "Mon, Nov 9, 2026 at 11:25 PM PT",
+    "fingerprint": "2ec5a4965bd8fb5865ff3ed3607e46376ea183c537a425d57ec226ffc331eb7c",
     "location": "KCI VMFH Rink",
-    "start": "Mon, Nov 9, 2026 at 8:25 PM PT",
-    "start_iso": "2026-11-09T20:25:00-08:00",
+    "start": "Mon, Nov 9, 2026 at 9:25 PM PT",
+    "start_iso": "2026-11-09T21:25:00-08:00",
     "summary": "\ud83c\udfd2Kraken Hockey League Game - Jokres @ Honey Badgers"
   },
   "ga-57458-9941-9944-@krakenhockeyleague.com": {
-    "end": "Sun, Nov 15, 2026 at 7:30 PM PT",
-    "fingerprint": "b37775c3ef2780e36655de25d288da2bede4d119478ed364ff91db3d98eac920",
+    "end": "Sun, Nov 15, 2026 at 8:30 PM PT",
+    "fingerprint": "4410543e48acc2985904186c8bde67ff9973107f5593605ceed6a0f6af33eed5",
     "location": "accesso ShoWare Center",
-    "start": "Sun, Nov 15, 2026 at 5:30 PM PT",
-    "start_iso": "2026-11-15T17:30:00-08:00",
+    "start": "Sun, Nov 15, 2026 at 6:30 PM PT",
+    "start_iso": "2026-11-15T18:30:00-08:00",
     "summary": "\ud83c\udfd2Kraken Hockey League Game - Honey Badgers @ Squids"
   },
   "ga-57565-9941-9944-@krakenhockeyleague.com": {
-    "end": "Mon, Nov 23, 2026 at 11:50 PM PT",
-    "fingerprint": "0170291e13313f8db6cc5f9fe6e6fc69c41eaa724ab529f9c8115b8165d4ff19",
+    "end": "Tue, Nov 24, 2026 at 12:50 AM PT",
+    "fingerprint": "ec14c1aaca5e3eb3562594efa539dedbe9153f6a38ea3c33c8177c7840cb6ed5",
     "location": "Kent Valley Ice Centre",
-    "start": "Mon, Nov 23, 2026 at 9:50 PM PT",
-    "start_iso": "2026-11-23T21:50:00-08:00",
+    "start": "Mon, Nov 23, 2026 at 10:50 PM PT",
+    "start_iso": "2026-11-23T22:50:00-08:00",
     "summary": "\ud83c\udfd2Kraken Hockey League Game - Honey Badgers @ PussyCats"
+  },
+  "ga-57622-9941-9944-@krakenhockeyleague.com": {
+    "end": "Tue, Dec 1, 2026 at 12:15 AM PT",
+    "fingerprint": "200d9c3d8cad8092190c027e4228fa6c0bc1c37fb103858c4631d7520f61b0ca",
+    "location": "Olympic View Arena",
+    "start": "Mon, Nov 30, 2026 at 10:15 PM PT",
+    "start_iso": "2026-11-30T22:15:00-08:00",
+    "summary": "\ud83c\udfd2Kraken Hockey League Game - Jokres @ Honey Badgers"
   }
 }
