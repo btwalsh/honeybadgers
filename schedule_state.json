@@ -198,5 +198,13 @@
     "start": "Mon, Nov 30, 2026 at 10:15 PM PT",
     "start_iso": "2026-11-30T22:15:00-08:00",
     "summary": "\ud83c\udfd2Kraken Hockey League Game - Jokres @ Honey Badgers"
+  },
+  "ga-57719-9941-9944-@krakenhockeyleague.com": {
+    "end": "Mon, Dec 7, 2026 at 11:20 PM PT",
+    "fingerprint": "01f9491f6b2bc890ce417dccfaca971357be21579ac1424481843c5baea1249f",
+    "location": "KCI VMFH Rink",
+    "start": "Mon, Dec 7, 2026 at 9:20 PM PT",
+    "start_iso": "2026-12-07T21:20:00-08:00",
+    "summary": "\ud83c\udfd2Kraken Hockey League Game - Icemen @ Honey Badgers"
   }
 }
